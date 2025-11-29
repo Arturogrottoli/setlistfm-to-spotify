@@ -12,7 +12,7 @@ export default function SetupPage() {
 
   const handleSpotifyAuth = () => {
     const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID
-    const redirectUri = `${window.location.origin}/setup/callback`
+    const redirectUri = typeof window !== "undefined" ? `${window.location.origin}/setup/callback` : ""
     const scopes = "playlist-modify-public playlist-modify-private"
 
     const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes)}`

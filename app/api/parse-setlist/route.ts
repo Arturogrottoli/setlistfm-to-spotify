@@ -8,25 +8,34 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "URL inválida. Debe ser de setlist.fm" }, { status: 400 })
     }
 
-    const setlistIdMatch = url.match(/setlist\.fm\/setlist\/.*\.html$/)
-    if (!setlistIdMatch) {
+    let setlistId: string | null = null
+
+    const idMatch1 = url.match(/-([a-f0-9]{6,8})\.html$/)
+    if (idMatch1) {
+      setlistId = idMatch1[1]
+    } else {
+      const idMatch2 = url.match(/([a-f0-9]{6,8})\.html$/)
+      if (idMatch2) {
+        setlistId = idMatch2[1]
+      } else {
+        const idMatch3 = url.match(/-([a-f0-9]{6,8})(?:\.html|$)/)
+        if (idMatch3) {
+          setlistId = idMatch3[1]
+        }
+      }
+    }
+
+    if (!setlistId) {
       console.log("[v0] URL:", url)
       console.log("[v0] Regex match failed")
       return NextResponse.json(
-        { error: "URL inválida. Asegúrate de pegar la URL completa del setlist" },
+        { error: "URL inválida. Asegúrate de pegar la URL completa del setlist de setlist.fm" },
         { status: 400 },
       )
     }
 
-    const idMatch = url.match(/([a-f0-9]{8})\.html$/)
-    if (!idMatch) {
-      return NextResponse.json({ error: "No se pudo extraer el ID del setlist" }, { status: 400 })
-    }
-
-    const setlistId = idMatch[1]
     console.log("[v0] Extracted setlist ID:", setlistId)
 
-    // Call setlist.fm API
     const apiKey = process.env.SETLISTFM_API_KEY
     if (!apiKey) {
       return NextResponse.json({ error: "API key de setlist.fm no configurada" }, { status: 500 })
@@ -40,32 +49,52 @@ export async function POST(request: Request) {
     })
 
     if (!response.ok) {
-      throw new Error("Error al obtener datos de setlist.fm")
+      const errorText = await response.text()
+      console.error("[v0] setlist.fm API error:", response.status, errorText)
+      let errorMessage = "Error al obtener datos de setlist.fm"
+      try {
+        const errorData = JSON.parse(errorText)
+        errorMessage = errorData.message || errorMessage
+      } catch {
+        errorMessage = `Error ${response.status}: ${errorText.substring(0, 100)}`
+      }
+      return NextResponse.json({ error: errorMessage }, { status: response.status })
     }
 
     const data = await response.json()
 
-    // Parse songs from setlist
     const songs: { name: string; artist: string }[] = []
     const artist = data.artist?.name || "Unknown Artist"
 
     if (data.sets?.set) {
-      for (const set of data.sets.set) {
+      const sets = Array.isArray(data.sets.set) ? data.sets.set : [data.sets.set]
+      
+      for (const set of sets) {
         if (set.song) {
-          for (const song of set.song) {
-            songs.push({
-              name: song.name,
-              artist: song.cover?.name || artist,
-            })
+          const songsInSet = Array.isArray(set.song) ? set.song : [set.song]
+          for (const song of songsInSet) {
+            if (song.name) {
+              songs.push({
+                name: song.name,
+                artist: song.cover?.name || artist,
+              })
+            }
           }
         }
       }
     }
 
+    if (songs.length === 0) {
+      return NextResponse.json(
+        { error: "No se encontraron canciones en este setlist" },
+        { status: 400 },
+      )
+    }
+
     const venue = data.venue?.name || ""
     const city = data.venue?.city?.name || ""
     const date = data.eventDate || ""
-    const playlistName = `${artist} - ${venue || city} ${date}`
+    const playlistName = `${artist} - ${venue || city} ${date}`.trim()
 
     return NextResponse.json({
       songs,
@@ -74,6 +103,7 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     console.error("Error parsing setlist:", error)
-    return NextResponse.json({ error: "Error al procesar el setlist" }, { status: 500 })
+    const errorMessage = error instanceof Error ? error.message : "Error al procesar el setlist"
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }

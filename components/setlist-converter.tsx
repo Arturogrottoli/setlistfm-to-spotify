@@ -48,9 +48,14 @@ export function SetlistConverter() {
         throw new Error(data.error || "Error al procesar el setlist")
       }
 
+      if (!data.songs || data.songs.length === 0) {
+        setError("No se encontraron canciones en este setlist")
+        return
+      }
+
       setSongs(data.songs)
-      setArtistName(data.artist)
-      setPlaylistName(data.playlistName)
+      setArtistName(data.artist || "")
+      setPlaylistName(data.playlistName || "")
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al procesar el setlist")
     } finally {

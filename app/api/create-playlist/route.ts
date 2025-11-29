@@ -35,10 +35,18 @@ export async function POST(request: Request) {
     })
 
     if (!tokenResponse.ok) {
-      const errorData = await tokenResponse.json()
-      console.error("[v0] Spotify token error:", errorData)
+      let errorMessage = "Error al autenticar con Spotify"
+      try {
+        const errorData = await tokenResponse.json()
+        console.error("[v0] Spotify token error:", errorData)
+        errorMessage = errorData.error_description || errorData.error || errorMessage
+      } catch {
+        const errorText = await tokenResponse.text()
+        console.error("[v0] Spotify token error (text):", errorText)
+        errorMessage = `Error ${tokenResponse.status}: ${errorText.substring(0, 100)}`
+      }
       console.error("[v0] Refresh token value:", refreshToken ? `${refreshToken.substring(0, 10)}...` : "MISSING")
-      throw new Error(`Spotify token error: ${errorData.error_description || "Unknown error"}`)
+      return NextResponse.json({ error: errorMessage }, { status: 401 })
     }
 
     const { access_token } = await tokenResponse.json()
@@ -72,7 +80,15 @@ export async function POST(request: Request) {
     })
 
     if (!playlistResponse.ok) {
-      throw new Error("Error al crear la playlist")
+      let errorMessage = "Error al crear la playlist"
+      try {
+        const errorData = await playlistResponse.json()
+        errorMessage = errorData.error?.message || errorMessage
+      } catch {
+        const errorText = await playlistResponse.text()
+        errorMessage = `Error ${playlistResponse.status}: ${errorText.substring(0, 100)}`
+      }
+      throw new Error(errorMessage)
     }
 
     const playlistData = await playlistResponse.json()
@@ -107,7 +123,7 @@ export async function POST(request: Request) {
 
     // Add tracks to playlist
     if (trackUris.length > 0) {
-      await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+      const addTracksResponse = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${access_token}`,
@@ -117,6 +133,10 @@ export async function POST(request: Request) {
           uris: trackUris,
         }),
       })
+
+      if (!addTracksResponse.ok) {
+        console.error("[v0] Error adding tracks to playlist:", await addTracksResponse.text())
+      }
     }
 
     return NextResponse.json({
