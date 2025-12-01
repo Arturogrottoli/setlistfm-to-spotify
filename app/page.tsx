@@ -5,8 +5,8 @@ export default function Home() {
   const hasRefreshToken = !!process.env.SPOTIFY_REFRESH_TOKEN
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background">
-      <div className="container mx-auto px-4 py-12">
+    <main className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background flex flex-col">
+      <div className="container mx-auto px-4 py-12 flex-1">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-5xl md:text-6xl font-bold mb-4 text-balance bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
@@ -43,6 +43,11 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <footer className="py-6 text-center">
+        <p className="text-xs text-black">
+          Sitio web desarrollado por Arturo Grottoli®
+        </p>
+      </footer>
     </main>
   )
 }
