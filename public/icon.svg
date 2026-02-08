@@ -1,60 +1,43 @@
 <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background -->
-  <circle cx="256" cy="256" r="256" fill="#1DB954"/>
+  <!-- Fondo verde Spotify -->
+  <rect width="512" height="512" fill="#1DB954"/>
   
-  <!-- Left: Electric Guitar tilted -->
-  <g transform="translate(120, 150) rotate(-25)">
-    <!-- Guitar body -->
-    <ellipse cx="60" cy="80" rx="35" ry="50" fill="#ffffff"/>
-    <!-- Guitar neck -->
-    <rect x="50" y="10" width="20" height="130" fill="#ffffff"/>
-    <!-- Tuning pegs -->
-    <circle cx="55" cy="5" r="5" fill="#ffffff"/>
-    <circle cx="65" cy="5" r="5" fill="#ffffff"/>
-    <!-- Strings -->
-    <line x1="55" y1="20" x2="55" y2="120" stroke="#1DB954" stroke-width="1.5"/>
-    <line x1="60" y1="20" x2="60" y2="125" stroke="#1DB954" stroke-width="1.5"/>
-    <line x1="65" y1="20" x2="65" y2="125" stroke="#1DB954" stroke-width="1.5"/>
+  <!-- Círculo blanco central -->
+  <circle cx="256" cy="256" r="200" fill="#ffffff"/>
+  
+  <!-- Notas musicales -->
+  <!-- Nota 1 (izquierda) -->
+  <g transform="translate(160, 200)">
+    <!-- Cabeza de nota -->
+    <circle cx="0" cy="40" r="12" fill="#1DB954"/>
+    <!-- Tallo -->
+    <rect x="8" y="0" width="6" height="40" fill="#1DB954"/>
+    <!-- Bandera -->
+    <path d="M 14 0 Q 40 5 40 15 Q 40 25 14 30 Z" fill="#1DB954"/>
   </g>
   
-  <!-- Center-Right: Checklist -->
-  <g transform="translate(240, 140)">
-    <!-- Lines for checklist items -->
-    <line x1="0" y1="10" x2="120" y2="10" stroke="#ffffff" stroke-width="3"/>
-    <line x1="0" y1="40" x2="120" y2="40" stroke="#ffffff" stroke-width="3"/>
-    <line x1="0" y1="70" x2="100" y2="70" stroke="#ffffff" stroke-width="3"/>
-    
-    <!-- Check marks -->
-    <g transform="translate(-35, 0)">
-      <polyline points="0,8 8,15 20,3" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    </g>
-    <g transform="translate(-35, 30)">
-      <polyline points="0,8 8,15 20,3" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    </g>
-    
-    <!-- Last item transforming to music icon -->
-    <g transform="translate(-35, 60)">
-      <polyline points="0,8 8,15 20,3" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    </g>
+  <!-- Nota 2 (derecha) -->
+  <g transform="translate(280, 160)">
+    <!-- Cabeza de nota -->
+    <circle cx="0" cy="50" r="12" fill="#1DB954"/>
+    <!-- Tallo -->
+    <rect x="8" y="0" width="6" height="50" fill="#1DB954"/>
+    <!-- Bandera -->
+    <path d="M 14 0 Q 40 5 40 15 Q 40 25 14 30 Z" fill="#1DB954"/>
   </g>
   
-  <!-- Right: Music Icon with sound waves -->
-  <g transform="translate(380, 160)">
-    <!-- Music note inside circle -->
-    <circle cx="0" cy="20" r="50" fill="none" stroke="#ffffff" stroke-width="2.5"/>
-    
-    <!-- Sound waves -->
-    <path d="M -70 20 Q -75 10 -80 20" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round"/>
-    <path d="M -70 20 Q -75 30 -80 20" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round"/>
-    <path d="M 70 20 Q 75 10 80 20" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round"/>
-    <path d="M 70 20 Q 75 30 80 20" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round"/>
-    
-    <!-- Music note -->
-    <g transform="translate(0, 10)">
-      <circle cx="0" cy="-15" r="6" fill="#ffffff"/>
-      <rect x="-2" y="-10" width="2" height="25" fill="#ffffff"/>
-      <circle cx="18" cy="0" r="6" fill="#ffffff"/>
-      <path d="M 0 -8 Q 9 -5 18 5" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round"/>
-    </g>
+  <!-- Lista de canciones (derecha) -->
+  <g transform="translate(320, 280)">
+    <!-- Línea 1 -->
+    <line x1="0" y1="0" x2="80" y2="0" stroke="#1DB954" stroke-width="8" stroke-linecap="round"/>
+    <!-- Línea 2 -->
+    <line x1="0" y1="25" x2="70" y2="25" stroke="#1DB954" stroke-width="8" stroke-linecap="round"/>
+    <!-- Línea 3 -->
+    <line x1="0" y1="50" x2="60" y2="50" stroke="#1DB954" stroke-width="8" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Checkmark grande a la izquierda -->
+  <g transform="translate(180, 320)">
+    <polyline points="0,25 18,40 50,8" stroke="#1DB954" stroke-width="16" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
 </svg>
