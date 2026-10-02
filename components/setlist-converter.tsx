@@ -106,8 +106,7 @@ export function SetlistConverter() {
       const data = await response.json()
 
       if (!response.ok) {
-        const debugSuffix = data.debug ? ` | DEBUG: ${JSON.stringify(data.debug)}` : ""
-        throw new Error((data.error || "Error al crear la playlist") + debugSuffix)
+        throw new Error(data.error || "Error al crear la playlist")
       }
 
       setSuccess(true)
