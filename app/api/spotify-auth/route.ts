@@ -10,7 +10,9 @@ export async function POST(request: NextRequest) {
 
     const clientId = process.env.SPOTIFY_CLIENT_ID
     const clientSecret = process.env.SPOTIFY_CLIENT_SECRET
-    const redirectUri = `${request.nextUrl.origin}/api/spotify-auth-callback`
+    const host = request.headers.get("host") ?? request.nextUrl.host
+    const protocol = request.headers.get("x-forwarded-proto") ?? (host.startsWith("127.0.0.1") || host.startsWith("localhost") ? "http" : "https")
+    const redirectUri = `${protocol}://${host}/api/spotify-callback`
 
     const response = await fetch("https://accounts.spotify.com/api/token", {
       method: "POST",
