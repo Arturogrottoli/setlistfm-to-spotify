@@ -46,7 +46,20 @@ export async function POST(request: Request) {
         errorMessage = `Error ${tokenResponse.status}: ${errorText.substring(0, 100)}`
       }
       console.error("[v0] Refresh token value:", refreshToken ? `${refreshToken.substring(0, 10)}...` : "MISSING")
-      return NextResponse.json({ error: errorMessage }, { status: 401 })
+      return NextResponse.json(
+        {
+          error: errorMessage,
+          debug: {
+            clientIdLength: clientId.length,
+            clientIdTrimmedLength: clientId.trim().length,
+            clientSecretLength: clientSecret.length,
+            clientSecretTrimmedLength: clientSecret.trim().length,
+            refreshTokenLength: refreshToken.length,
+            refreshTokenTrimmedLength: refreshToken.trim().length,
+          },
+        },
+        { status: 401 },
+      )
     }
 
     const { access_token } = await tokenResponse.json()
