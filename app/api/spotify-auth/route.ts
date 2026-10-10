@@ -1,6 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function POST(request: NextRequest) {
+  // Sólo disponible durante el setup inicial: con el token ya configurado la UI no usa esta ruta
+  // y no debe quedar expuesto un canje de códigos que usa el CLIENT_SECRET.
+  if (process.env.SPOTIFY_REFRESH_TOKEN) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 })
+  }
+
   try {
     const { code } = await request.json()
 
@@ -34,10 +40,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: data.error_description || data.error }, { status: 400 })
     }
 
+    // La UI de setup sólo necesita el refresh token.
     return NextResponse.json({
-      access_token: data.access_token,
       refresh_token: data.refresh_token,
-      expires_in: data.expires_in,
     })
   } catch (error) {
     console.error("[v0] Error in spotify-auth:", error)
